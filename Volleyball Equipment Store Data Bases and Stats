@@ -1,0 +1,32 @@
+-- Creat a volleyball equipment store database
+
+CREATE TABLE Volleyball_Equipment (ID INTEGER PRIMARY KEY, Name TEXT, Women INTEGER, Men INTEGER, Brand TEXT);
+
+INSERT INTO Volleyball_Equipment VALUES (1, "Balls", 48, 45, "Molten");
+INSERT INTO Volleyball_Equipment VALUES (2, "Bands", 38, 25, "Asics");
+INSERT INTO Volleyball_Equipment VALUES (3, "Cones", 50, 42, "Joma");
+INSERT INTO Volleyball_Equipment VALUES (4, "Heat Pads", 10, 12, "Mueller");
+INSERT INTO Volleyball_Equipment VALUES (5, "Tape", 5, 3, "Faber");
+INSERT INTO Volleyball_Equipment VALUES (6, "Blocking Devices", 1, 2, "S&T");
+INSERT INTO Volleyball_Equipment VALUES (7, "Mops", 5, 5, "Mueller");
+INSERT INTO Volleyball_Equipment VALUES (8, "Ladders", 2, 1, "Joma");
+INSERT INTO Volleyball_Equipment VALUES (9, "Medicine Balls", 5, 5, "Mikasa");
+INSERT INTO Volleyball_Equipment VALUES (10, "Joga Balls", 2, 1, "Fabletics");
+INSERT INTO Volleyball_Equipment VALUES (11, "Makers", 20, 15, "Expo");
+INSERT INTO Volleyball_Equipment VALUES (12, "White Boards", 3, 2, "Post-It");
+INSERT INTO Volleyball_Equipment VALUES (13, "Ref Stands", 1, 2, "Quartet");
+INSERT INTO Volleyball_Equipment VALUES (14, "Whistles", 10, 10, "Wicks");
+INSERT INTO Volleyball_Equipment VALUES (15, "Ball Guns", 0, 1, "S&T");
+
+-- Display all items from store
+SELECT * FROM Volleyball_Equipment;
+
+-- Display all items by price in decending order
+SELECT * FROM Volleyball_equipment ORDER BY Price desc;
+
+-- Display number of items that inventory is larger for the men's section
+SELECT * FROM Volleyball_Equipment WHERE Women < Men ORDER BY Brand;
+
+-- Display total number of a specific item from both categories
+SELECT SUM(men+Women) FROM Volleyball_Equipment WHERE Name="Balls";
+
