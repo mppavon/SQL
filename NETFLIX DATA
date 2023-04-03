@@ -1,0 +1,41 @@
+# On this project, netflix data tables containing different information were provided. 
+# Below is a series of SQL code to extract particular information from one or both tables at the same time.
+
+# Joining both tables through the "ID" 
+SELECT People.show_id,
+People.director, 
+Titles.title,
+Titles.type FROM "CharlotteChaze/BreakIntoTech"."netflix_people" AS People 
+LEFT JOIN "CharlotteChaze/BreakIntoTech"."netflix_titles_info" AS Titles
+ON People.show_id=Titles.show_id LIMIT 6;
+
+# How many movie titles are there in the database? (movies only, not tv shows) 
+SELECT COUNT (*) FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE TYPE='Movie';
+
+# When was the last batch of information (tv shows and/or movies) added to the database?
+SELECT MAX(date(date_added))
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info";
+
+# Showing all titles in alphabetical order
+SELECT title FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+ORDER BY title asc;
+
+# Joining 2 different tables to show who directed the movie "Bright Star" 
+SELECT Titles.show_id, Titles.type, Titles.title, People.director FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" AS Titles
+Left join "CharlotteChaze/BreakIntoTech"."netflix_people" AS People
+ON Titles.show_id=People.show_id
+WHERE Titles.title='Bright Star';
+
+# Showing the oldest movie or tv show in the data base 
+SELECT title, release_year FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" 
+ORDER BY release_year asc;
+
+# Showing the oldest movie or tv show in the data, and making sure all content from that year is showing
+SELECT title, release_year 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type = 'Movie'
+AND release_year <= 
+(SELECT MIN(release_year) 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type = 'Movie'); 
