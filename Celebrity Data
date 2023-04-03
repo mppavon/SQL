@@ -1,0 +1,60 @@
+/* Create table about the people and what they do here */
+
+create TABLE Famous_People (ID integer primary key, Name text, Age text);
+
+INSERT INTO Famous_People VALUES (1, "Brat Pitt", "44");
+INSERT INTO Famous_People VALUES (2, "John Lennon", "Deceased");
+INSERT INTO Famous_People VALUES (3, "John Travolta", "61");
+INSERT INTO Famous_People VALUES (4, "Angelina Jolie", "45");
+INSERT INTO Famous_People VALUES (5, "Chris Hemsworth", "38");
+INSERT INTO Famous_People VALUES (6, "Jessica Alba", "44");
+INSERT INTO Famous_People VALUES (7, "Miley Cyrus", "32");
+INSERT INTO Famous_People VALUES (8, "Adele", "38");
+ SELECT * FROM Famous_People;
+ 
+create TABLE Movies (ID integer primary key, Name text, Released integer, Cast text);
+
+INSERT INTO Movies VALUES (1, "The Last Song", 2010, "Miley Cyrus");
+INSERT INTO Movies VALUES (2, "Grease", 1985, "John Travolta");
+INSERT INTO Movies VALUES (3, "Tumb Raider", 1996, "Angelina Jolie");
+INSERT INTO Movies VALUES (4, "Train", 2021, "Brat Pitt");
+INSERT INTO Movies VALUES (5, "Avengers", 2010, "Chris Hemsworth");
+INSERT INTO Movies VALUES (6, "Fantastic 4", 2007, "Jessica Alba");
+
+SELECT * FROM Movies;
+
+create TABLE Songs (ID integer, Name text, Released integer);
+INSERT INTO Songs VALUES (7, "When I look at You", 2013);
+INSERT INTO Songs VALUES (8, "Hello", 2016);
+INSERT INTO Songs VALUES (2, "Imagine", 1971);
+INSERT INTO Songs VALUES (7, "Flowers", 2023);
+
+SELECT * FROM Songs;
+
+create TABLE Fictional_Characters (ID integer primary key, Name text, Comic text);
+
+INSERT INTO Fictional_Characters VALUES (1, "Batman", "DC");
+INSERT INTO Fictional_Characters VALUES (2, "Superman", "DC");
+INSERT INTO Fictional_Characters VALUES (3, "Thor", "Marvel");
+INSERT INTO Fictional_Characters VALUES (4, "Celestial", "Marvel");
+
+SELECT * FROM Fictional_Characters;
+
+
+/* Table with famous people and movies they were casted for */
+
+SELECT Famous_People.Name, Movies.Released, Movies.Name as Movie FROM Famous_People
+Inner JOIN Movies 
+ON Famous_People.Name=Movies.Cast
+ORDER BY Released desc;
+
+/* Table Showing Famous People and Songs they released */ 
+
+SELECT Famous_People.Name, Songs.Name, Songs.Released FROM Famous_People
+Inner JOIN Songs 
+ON Songs.ID=Famous_People.ID
+ORDER BY Released desc;
+
+SELECT Famous_People.Name, Famous_People.Age FROM Famous_People
+INNER JOIN Famous_People as A
+WHERE A.Age=Famous_People.Age
