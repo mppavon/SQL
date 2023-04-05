@@ -1,20 +1,17 @@
 # In this project, I am querying customer and order data from several tables under the BIT_DB Database
 
 # Total number of orders during the month of January with relevant order ID values
-
 SELECT COUNT(orderID) FROM BIT_DB.JanSales 
 WHERE length(orderID)=6
 AND orderID <>'Order ID';
 
 # Total number of iPhone orders in the month of January
-
 SELECT COUNT(*) FROM BIT_DB.JanSales 
 WHERE length(orderID)=6
 AND orderID <>'Order ID'
 AND Product='iPhone';
 
 # Querying all account numbers where iPhone were ordered during the month of February
-
 SELECT customers.acctnum FROM BIT_DB.customers
 INNER JOIN FebSales
 ON FebSales.orderID=customers.order_id
@@ -22,25 +19,21 @@ AND orderID <>'Order ID'
 AND Product='iPhone';
 
 # Querying the cheapest product sold duing the month of January
-
 SELECT MIN(price), Product FROM BIT_DB.JanSales 
 GROUP BY product, price 
 ORDER BY price ASC
 LIMIT 1;
 
 # Total revenue by product for the month of January
-
 SELECT SUM(Quantity)*price as revenue, Product FROM BIT_DB.JanSales 
 GROUP BY Product;
 
 # Total revenue by products shipped to "548 Lincoln St, Seattle, WA 98101"
-
 SELECT SUM(Quantity)*price as revenue, Product, location FROM BIT_DB.FebSales 
 WHERE location='548 Lincoln St, Seattle, WA 98101'
 Group by Product;
 
 # Number of customers that ordered more than 2 products at a time in February, including the average amount spent for those customers
-
 SELECT COUNT(distinct cust.acctnum), 
 AVG(quantity*price) FROM BIT_DB.FebSales Feb
 LEFT JOIN BIT_DB.customers cust
@@ -50,38 +43,69 @@ AND length(orderid) = 6
 AND orderid <> 'Order ID';
 
 # Orders by date between February 13th to 18th
-
 SELECT orderdate
 FROM BIT_DB.FebSales
 WHERE orderdate between '02/13/19 00:00' AND '02/18/19 00:00';
 
 # Specific order on February 18th at 01:35
-
 SELECT location
 FROM BIT_DB.FebSales 
 WHERE orderdate = '02/18/19 01:35';
 
 # All orders processed on February 18th
-
 SELECT sum(quantity)
 FROM BIT_DB.FebSales 
 WHERE orderdate like '02/18/19%';
 
 # All orders processed on February with the word "batteries" in their description
-
 SELECT distinct Product
 FROM BIT_DB.FebSales
 WHERE Product like '%Batteries%';
 
 # All orders processed on February with the numbers ".99" in their price description
-
 SELECT distinct Product, Price
 FROM BIT_DB.FebSales 
 WHERE Price like '%.99';
 
 # Total sum of processed orders for each product during February in Los Angeles
-
 SELECT distinct Product, SUM (quantity)
 FROM BIT_DB.FebSales
 WHERE location like '%Los Angeles%'
 GROUP BY Product
+
+# Querying the locations in New York that received at least 3 orders in January with the totla amount of orders per account
+SELECT distinct location, COUNT(orderID)
+FROM BIT_DB.JanSales
+WHERE location like '%NY%'
+AND length(orderid) = 6 
+AND orderid <> 'Order ID'
+GROUP BY location
+HAVING count(orderID)>2;
+
+# Number of each type of headphone that was sold in February
+SELECT Product, sum(Quantity) FROM BIT_DB.FebSales 
+where product like '%Headphones%' 
+group by Product;
+
+# Querying the average amount spent per account in February
+SELECT AVG(quantity*price) FROM BIT_DB.FebSales FEB
+LEFT JOIN BIT_DB.customers customers
+ON customers.order_id=FEB.orderID
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID';
+
+# Querying the average quantity of products purchased per account in February
+SELECT SUM(quantity)/count(cust.acctnum)
+FROM BIT_DB.FebSales Feb
+LEFT JOIN BIT_DB.customers cust
+ON FEB.orderid=cust.order_id
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID';
+
+# Querying the product that brought in the most revenue in January with its total revenue
+SELECT SUM(Quantity)*price as revenue, Product FROM BIT_DB.JanSales
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID'
+group by product
+order by revenue desc
+LIMIT 1;
