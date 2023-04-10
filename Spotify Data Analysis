@@ -51,4 +51,15 @@ select artist_name, track_name, avg(popularity), avg(danceability), avg(energy) 
 group by artist_name, track_name
 order by avg(popularity) desc;
 
+WITH Temptable AS (
+SELECT avg(Spotify.popularity) AS average_popularity, 
+Spotify.artist_name 
+from Spotifydata Spotify
+group by Spotify.artist_name
+)
+
+SELECT artist_name, average_popularity, 'Top_Star' as tag
+from Temptable
+where average_popularity >= 90;
+
 
