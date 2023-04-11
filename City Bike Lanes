@@ -1,3 +1,5 @@
+# Created a table that shows data regarding the city bike lanes and their safety ratings
+
 CREATE TABLE BIT_DB.CityBikeLanes (
 id integer primary key,
 year_installed year not null,
@@ -69,33 +71,33 @@ INSERT INTO BIT_DB.CityBikeLanes values(58,2011, 2021, "Beaver", 3.5, 2.5, "no")
 INSERT INTO BIT_DB.CityBikeLanes values(59,2008, 2021,"Kensington",4,4.9,"yes");
 INSERT INTO BIT_DB.CityBikeLanes values(60,2002, 2021,"Mouse",4.5,4.3,"no");
 
-
-SELECT * FROM CityBikeLanes LIMIT 10;
-
-SELECT * FROM CityBikeLanes WHERE street='Walnut';
-
-
-WITH safety_average_cte AS (
-SELECT avg(safetyrating) as 'rating', street 
-from CityBikeLanes
-group by street
-)
-
-
-SELECT street, rating, 'Safe Lane' as 'Label' 
-from safety_average_cte
-where rating >= 4;
+# Querying a temporary table from CityBikeLanes to show the top safe lanes in the city with the label "Safe Lane"
 
 WITH safety_average_cte AS (
 SELECT street, AVG(safetyrating) as 'rating'
 FROM citybikelanes
 GROUP BY street)
--- THE CODE ABOVE THIS LINE IS THE CTE --
 
--- THE CODE BELOW THIS LINE IS A SQL QUERY THAT SELECTS FROM THE CTE --
 SELECT 
 street,
 rating,
 'safe lane' as 'label'
 FROM safety_average_cte
-WHERE rating >=4
+WHERE rating >=4;
+
+# Querying the average safety rating for all the bike lanes in the city
+
+SELECT street, safetyrating,
+AVG(safetyrating) OVER (PARTITION BY street) as "Average_safety_rating"
+FROM CityBikeLanes;
+
+# Querying a table that shows the average safety ratings and demonstrates which lanes should be closed, improved, and leaved "as is" fo the city authorities. This through the use of window functions
+
+SELECT street, safetyrating,
+AVG(safetyrating) OVER (PARTITION BY street) as 'Average_safety_rating',
+CASE
+    WHEN AVG(safetyrating) OVER (PARTITION BY street) >=4 THEN 'Leave as Is'
+    WHEN AVG(safetyrating) OVER (PARTITION BY street) <2.5 THEN 'Remove'
+    ELSE 'Improvements Needed'
+END AS 'Recommendation'
+FROM CityBikeLanes;
