@@ -1,7 +1,3 @@
-select * from customers;
-select * from invoices;
-select * from employees;
-
 select * from customers
 inner join invoices
 on invoices.BillingAddress=customers.Address
@@ -63,3 +59,52 @@ where customers.LastName like '%Almeida%';
 
 select count(invoiceId), InvoiceDate from invoices
 where InvoiceDate like '%2009%';
+
+--What are the total sales for 2009?
+
+select sum(Total) as Total_Sales_2009 from Invoices
+where InvoiceDate like '%2009%';
+
+--Write a query that includes the purchased track name with each invoice line ID.
+
+select tracks.Name, invoice_items.InvoiceLineId from Invoice_items 
+Inner Join tracks 
+on tracks.TrackId=invoice_items.TrackId;
+
+--Write a query that includes the purchased track name AND artist name with each invoice line ID.
+
+select tracks.Name, composer as Artist, invoice_items.InvoiceLineId from Invoice_items 
+Inner Join tracks 
+on tracks.TrackId=invoice_items.TrackId;
+
+--Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre.
+
+select tracks.Name as Track_Name, albums.Title as Album_Title, media_types.Name as Media_Type, genres.Name as Genre from albums
+inner join tracks
+on albums.AlbumId=tracks.AlbumId
+inner join media_types
+on media_types.MediaTypeId=tracks.MediaTypeId
+inner join genres
+on genres.GenreId=tracks.GenreId
+order by Track_Name;
+
+--Show the total sales made by each sales agent.
+
+select SUM(invoices.Total), employees.LastName from employees
+inner join customers
+on customers.SupportRepId=employees.EmployeeId
+inner join invoices
+on invoices.CustomerId=customers.CustomerId
+group by employees.EmployeeId
+order by employees.EmployeeId;
+
+--Which sales agent made the most dollars in sales in 2009?
+
+select SUM(invoices.Total), employees.LastName from employees
+inner join customers
+on customers.SupportRepId=employees.EmployeeId
+inner join invoices
+on invoices.CustomerId=customers.CustomerId
+where invoices.InvoiceDate like '%2009%'
+group by employees.EmployeeId
+order by employees.EmployeeId;
